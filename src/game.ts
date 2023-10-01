@@ -3,8 +3,8 @@ import { KeyboardKey, Keys as KeyboardKeys } from './KeyboardKey';
 import { Keys, LAPTOPX, LAPTOPY } from './Constants';
 import { Laptop } from './Laptop';
 import { NotePage } from './NotePage';
-import { Book, BookButton } from './Book';
-import { checkOverlap } from './UtilsFunctions';
+import { Book, BookButton, BookPage } from './Book';
+import { checkOverlap, playRandom } from './UtilsFunctions';
 export default class Level extends Phaser.Scene
 {
     heldObject : Phaser.GameObjects.Container = null;
@@ -15,7 +15,6 @@ export default class Level extends Phaser.Scene
     laptop : Laptop;
     keyS;
     keyH;
-    book : Book;
     constructor ()
     {
         super();
@@ -30,13 +29,29 @@ export default class Level extends Phaser.Scene
         this.load.image(Keys.Textures.BOOKFRONT, 'assets/textures/Book-Front.png');
         this.load.image(Keys.Textures.BOOKBACK, 'assets/textures/Book-Back.png');
         this.load.image(Keys.Textures.BOOKOPEN, 'assets/textures/Book-Open.png');
+        this.load.image(Keys.Textures.BOOKBUTTON, 'assets/textures/Book-Button.png');
 
         this.load.audio(Keys.Sounds.PAPERSHEET1, 'assets/sounds/paper-sheet-1.mp3');
         this.load.audio(Keys.Sounds.PAPERSHEET2, 'assets/sounds/paper-sheet-2.mp3');
         this.load.audio(Keys.Sounds.PAPERSHEET3, 'assets/sounds/paper-sheet-3.mp3');
+
         this.load.audio(Keys.Sounds.BACKSPACE, 'assets/sounds/backspace.mp3');
         this.load.audio(Keys.Sounds.SPACEBAR, 'assets/sounds/spacebar.mp3');
         this.load.audio(Keys.Sounds.KEYSTROKE, 'assets/sounds/keystroke.mp3');
+
+        this.load.audio(Keys.Sounds.BOOK1, 'assets/sounds/book-1.mp3');
+        this.load.audio(Keys.Sounds.BOOK2, 'assets/sounds/book-2.mp3');
+        this.load.audio(Keys.Sounds.BOOK3, 'assets/sounds/book-3.mp3');
+        this.load.audio(Keys.Sounds.BOOK4, 'assets/sounds/book-4.mp3');
+
+        this.load.audio(Keys.Sounds.PAGETURN1, 'assets/sounds/page-turn-1.mp3');
+        this.load.audio(Keys.Sounds.PAGETURN2, 'assets/sounds/page-turn-2.mp3');
+        this.load.audio(Keys.Sounds.PAGETURN3, 'assets/sounds/page-turn-3.mp3');
+
+        this.load.audio(Keys.Sounds.BOOKCLOSE1, 'assets/sounds/book-close-1.mp3');
+        this.load.audio(Keys.Sounds.BOOKCLOSE2, 'assets/sounds/book-close-2.mp3');
+
+        this.load.audio(Keys.Sounds.VALIDATION, 'assets/sounds/validation.mp3');
     }
 
     create ()
@@ -53,12 +68,16 @@ export default class Level extends Phaser.Scene
         
         this.laptop = new Laptop(this);
         
-        this.book = Book.init(this, this.movable);
-        // const note = new NotePage(this, this.movable, 500, 600);
-        // new NotePage(this, this.movable, -100, 0);
-        // new NotePage(this, this.movable, 300, 600);
-        // NotePage.create(this, this.movable, 500, 500)
-        // .addText("I like apples", -70, -100);
+        Book.init(this, this.movable);
+        BookPage.create(this).addText("Page 1", 50, 100);
+        BookPage.create(this).addText("Page 2", 50, 100);
+        BookPage.create(this).addText("Page 3", 50, 100);
+        BookPage.create(this).addText("Page 4", 50, 100);
+        const note = new NotePage(this, this.movable, 500, 600);
+        new NotePage(this, this.movable, -100, 0);
+        new NotePage(this, this.movable, 300, 600);
+        NotePage.create(this, this.movable, 500, 500)
+        .addText("I like apples", -70, -100);
         this.input.on('gameobjectdown', this.onGameObjectClick, this);
         this.input.on('pointerup', () => this.heldObject = null);    
 
@@ -91,8 +110,6 @@ export default class Level extends Phaser.Scene
             `laptop-relative x: ${pointer.x - LAPTOPX}`,
             `laptop-relative y: ${pointer.y - LAPTOPY}`,
         ]);
-        if (this.keyH.isDown) this.book.setVisible(false);
-        if (this.keyS.isDown) this.book.setVisible(true);
     }
 
     private onGameObjectClick(pointer : Phaser.Input.Pointer, gameObject : Phaser.GameObjects.Container)
@@ -128,6 +145,11 @@ export default class Level extends Phaser.Scene
         this.heldObject = gameObject;
         this.cursorX = pointer.x;
         this.cursorY = pointer.y;
+
+        if (gameObject instanceof NotePage)
+            playRandom(this, Keys.Sounds.PAPERSHEET1, Keys.Sounds.PAPERSHEET2, Keys.Sounds.PAPERSHEET3)
+        else if (gameObject instanceof Book)
+            playRandom(this, Keys.Sounds.BOOK1, Keys.Sounds.BOOK2, Keys.Sounds.BOOK3, Keys.Sounds.BOOK4);
     }
 
     private onPointerMove(pointer : Phaser.Input.Pointer)

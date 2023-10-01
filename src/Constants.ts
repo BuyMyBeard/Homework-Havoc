@@ -7,6 +7,16 @@ export const Keys =
         KEYSTROKE: 'keystroke',
         SPACEBAR: 'spacebar',
         BACKSPACE: 'backspace',
+        BOOK1: 'book1',
+        BOOK2: 'book2',
+        BOOK3: 'book3',
+        BOOK4: 'book4',
+        PAGETURN1:'pageturn1',
+        PAGETURN2: 'pageturn2',
+        PAGETURN3: 'pageturn3',
+        BOOKCLOSE1: 'bookclose1',
+        BOOKCLOSE2: 'bookclose2',
+        VALIDATION: 'validation',
     },
     Textures: {
         NOTESHEET: 'notesheet',
@@ -15,6 +25,7 @@ export const Keys =
         BOOKOPEN: 'bookopen',
         BOOKFRONT: 'bookfront',
         BOOKBACK: 'bookback',
+        BOOKBUTTON: 'bookbutton'
     },
 };
 

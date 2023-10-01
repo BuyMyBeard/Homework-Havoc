@@ -18,9 +18,10 @@ export class NotePage extends Phaser.GameObjects.Container
 
         (this as any).body.setCollideWorldBounds(true);
     }
+
     addText(text : string, x : number, y : number, fontColor = 0x333333, fontSize = 16)
     {
-        this.add(new Phaser.GameObjects.Text(this.scene, x, y, text, {fontFamily: "pixel-script", fontSize: fontSize}).setTint(fontColor));
+        this.add(new Phaser.GameObjects.Text(this.scene, x, y, text, {fontFamily: "vcr-osd-mono", fontSize: fontSize}).setTint(fontColor));
         return this;
     }
     addImage(key : string, x : number, y : number, scale = 1)
