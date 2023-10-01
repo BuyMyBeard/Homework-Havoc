@@ -1,14 +1,17 @@
 import * as Phaser from 'phaser';
-import { LAPTOPKEY, LAPTOPSCALE, LAPTOPX, LAPTOPY } from './Constants';
-import { KeyboardKey } from './LetterKey';
+import { Keys, LAPTOPSCALE, LAPTOPX, LAPTOPY } from './Constants';
+import { KeyboardKey } from './KeyboardKey';
+import { ComputerScreen } from './ComputerScreen';
 
 export class Laptop extends Phaser.GameObjects.Container
 {
+    computerScreen : ComputerScreen;
     constructor(scene : Phaser.Scene, )
     {
         super(scene, LAPTOPX, LAPTOPY);
         scene.add.existing(this);
-        this.add(new Phaser.GameObjects.Image(scene, 0, 0, LAPTOPKEY).setScale(LAPTOPSCALE, LAPTOPSCALE));
+        this.computerScreen = new ComputerScreen(scene);
+        this.add(new Phaser.GameObjects.Image(scene, 0, 0, Keys.Textures.LAPTOP).setScale(LAPTOPSCALE, LAPTOPSCALE));
         this.add(new KeyboardKey(scene, 'q', -150, 57, this));
         this.add(new KeyboardKey(scene, 'w', -122, 57, this));
         this.add(new KeyboardKey(scene, 'e', -94, 57, this));
@@ -39,5 +42,7 @@ export class Laptop extends Phaser.GameObjects.Container
         this.add(new KeyboardKey(scene, 'b', 16, 100, this, 30));
         this.add(new KeyboardKey(scene, 'n', 49, 100, this, 29));
         this.add(new KeyboardKey(scene, 'm', 80, 100, this, 30));
+
+        this.add(new KeyboardKey(scene, ' ', -85, 120, this, 138));
     }
 }

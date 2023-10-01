@@ -1,103 +1,83 @@
 import * as Phaser from 'phaser';
-import { KeyboardKey } from './LetterKey';
-import { LAPTOPKEY, LAPTOPX, LAPTOPY } from './Constants';
+import { KeyboardKey, Keys as KeyboardKeys } from './KeyboardKey';
+import { Keys, LAPTOPX, LAPTOPY } from './Constants';
 import { Laptop } from './Laptop';
-export default class Demo extends Phaser.Scene
+import { NotePage } from './NotePage';
+import { Book, ClosedBook } from './Book';
+export default class Level extends Phaser.Scene
 {
-    heldObject : Phaser.GameObjects.Sprite = null;
+    heldObject : Phaser.GameObjects.Container = null;
     cursorX = 0;
     cursorY = 0;
-    movable : Phaser.Physics.Arcade.Group;
-    text;
+    movable = new Phaser.GameObjects.Group(this);
+    debugText : Phaser.GameObjects.Text;
+    laptop : Laptop;
     constructor ()
     {
-        super('demo');
+        super();
     }
 
     preload ()
     {
-        this.load.image('logo', 'assets/phaser3-logo.png');
-        this.load.image('desk', 'assets/Desk.png');
-        this.load.image(LAPTOPKEY, 'assets/Laptop.png');
+        this.load.image('logo', 'assets/textures/phaser3-logo.png');
+        this.load.image(Keys.Textures.NOTESHEET, 'assets/textures/NoteSheet.png');
+        this.load.image(Keys.Textures.DESK, 'assets/textures/Desk.png');
+        this.load.image(Keys.Textures.LAPTOP, 'assets/textures/Laptop.png');
+        this.load.image(Keys.Textures.BOOKFRONT, 'assets/textures/Book-Front.png');
+        this.load.image(Keys.Textures.BOOKBACK, 'assets/textures/Book-Back.png');
+        this.load.image(Keys.Textures.BOOKOPEN, 'assets/textures/Book-Open.png');
+
+        this.load.audio(Keys.Sounds.PAPERSHEET1, 'assets/sounds/paper-sheet-1.mp3');
+        this.load.audio(Keys.Sounds.PAPERSHEET2, 'assets/sounds/paper-sheet-2.mp3');
+        this.load.audio(Keys.Sounds.PAPERSHEET3, 'assets/sounds/paper-sheet-3.mp3');
+        this.load.audio(Keys.Sounds.BACKSPACE, 'assets/sounds/backspace.mp3');
+        this.load.audio(Keys.Sounds.SPACEBAR, 'assets/sounds/spacebar.mp3');
+        this.load.audio(Keys.Sounds.KEYSTROKE, 'assets/sounds/keystroke.mp3');
     }
 
     create ()
     {
-        this.add.image(0, 0, 'desk').setOrigin(0,0).setScale(3, 3);
 
-        const logo = this.add.image(400, 70, 'logo');
+        //SoundManager.init(this, PAPERSHEET1KEY, PAPERSHEET2KEY, PAPERSHEET3KEY,BACKSPACEKEY, SPACEBARKEY, KEYSTROKEKEY);
+        
+        this.add.image(0, 0, Keys.Textures.DESK).setOrigin(0,0).setScale(3, 3);
 
-
-        this.text = this.add.text(10,10, 'Debug values');
-
-        this.tweens.add({
-            targets: logo,
-            y: 350,
-            duration: 1500,
-            ease: 'Sine.inOut',
-            yoyo: true,
-            repeat: -1
-        })
-
-
-        const movableBounds = new Phaser.Geom.Rectangle(0, 280, 960, 440);
+        this.debugText = this.add.text(10,10, 'Debug values');
 
         this.physics.world.setBounds(0, 280, 960, 440);
 
-        new Laptop(this);
-        // const paper = this.physics.add.sprite(500,600, 'logo')
-        // .setInteractive()
-        // .setCollideWorldBounds(true);
+        this.laptop = new Laptop(this);
 
-        // const paper2 = this.physics.add.sprite(500,500, 'logo')
-        // .setInteractive()
-        // .setCollideWorldBounds(true);
-        
-        this.movable = this.physics.add.group({
-            key: 'logo',
-            frameQuantity: 4,
-            collideWorldBounds: true,
-        });
-        Phaser.Actions.SetXY(this.movable.getChildren(), 500, 500);
-        this.movable.getChildren().forEach((object) => object.setInteractive());
+        const note = new NotePage(this, this.movable, 500, 600);
+        new NotePage(this, this.movable, -100, 0);
+        new NotePage(this, this.movable, 300, 600);
+        NotePage.create(this, this.movable, 500, 500)
+        .addText("I like apples", -70, -100);
+        this.input.on('gameobjectdown', this.onGameObjectClick, this);
+        this.input.on('pointerup', () => this.heldObject = null);    
 
-        // this.physics.add.overlap(group, group, (a, b) => console.log(a, b));
+        this.input.on('pointermove', this.onPointerMove, this);
 
-        this.input.on('gameobjectdown', (pointer : Phaser.Input.Pointer, gameObject : Phaser.GameObjects.Sprite) => {
-            if (gameObject instanceof KeyboardKey)
+    }
+    tryMoveUp(heldObject: Phaser.GameObjects.Container)
+    {
+        const heldObjectIndex = this.children.getIndex(heldObject);
+        for (let i = heldObjectIndex + 1; i < this.children.length; i++)
+        {
+            const nextObject = this.children.list[i];
+            if (!this.movable.children.contains(nextObject)) continue;
+            if (!this.checkOverlap(heldObject, nextObject)) 
             {
-                console.log((gameObject as KeyboardKey).key);
-                return;
+                this.children.moveBelow(nextObject, heldObject);
+                console.log(`Moved ${heldObjectIndex} above ${i}`);
             }
-            if (this.checkIfObstructed(gameObject)) return;
-            this.heldObject = gameObject;
-            this.children.bringToTop(gameObject);
-            this.cursorX = pointer.x;
-            this.cursorY = pointer.y;
-        });
-        this.input.on('pointerup', () => {
-            this.heldObject = null;
-        });
-
-        
-
-        this.input.on('pointermove', (pointer : Phaser.Input.Pointer) => {
-            if (this.heldObject === null) return;
-            const deltaX = pointer.x - this.cursorX;
-            const deltaY = pointer.y - this.cursorY;
-            this.heldObject.x += deltaX;
-            this.heldObject.y += deltaY;
-            this.cursorX = pointer.x;
-            this.cursorY = pointer.y;
-            // if (!this.checkIfObstructed(this.heldObject))
-            //     this.children.bringToTop(this.heldObject);
-        });
-
+            else return;
+        }
     }
     update(time: number, delta: number): void
     {
         const pointer = this.input.activePointer;
-        this.text.setText([
+        this.debugText.setText([
             `x: ${pointer.x}`,
             `y: ${pointer.y}`,
             `laptop-relative x: ${pointer.x - LAPTOPX}`,
@@ -121,20 +101,69 @@ export default class Demo extends Phaser.Scene
         return Phaser.Geom.Intersects.RectangleToRectangle(boundsA, boundsB);
     }
 
-    createKeys()
+    private onGameObjectClick(pointer : Phaser.Input.Pointer, gameObject : Phaser.GameObjects.Container)
     {
+        if (gameObject instanceof KeyboardKey)
+            this.processKeyboardKey((gameObject as KeyboardKey).key)
+        else
+            this.holdObject(pointer, gameObject);
+    };
+
+    private processKeyboardKey(input : KeyboardKeys)
+    {
+        switch (input)
+        {
+            case 'del':
+                this.laptop.computerScreen.eraseCharacter();
+                break;
+
+            case 'enter':
+                // TODO: validate answer
+                break;
+
+            default:
+                this.laptop.computerScreen.writeCharacter(input)
+                break;
+            }
     }
+
+    private holdObject(pointer : Phaser.Input.Pointer, gameObject : Phaser.GameObjects.Container)
+    {
+        this.heldObject = gameObject;
+        this.cursorX = pointer.x;
+        this.cursorY = pointer.y;
+    }
+
+    private onPointerMove(pointer : Phaser.Input.Pointer)
+    {
+        if (this.heldObject === null) return;
+
+        const deltaX = pointer.x - this.cursorX;
+        const deltaY = pointer.y - this.cursorY;
+
+        this.heldObject.x += deltaX;
+        this.heldObject.y += deltaY;
+        this.cursorX = pointer.x;
+        this.cursorY = pointer.y;
+        this.tryMoveUp(this.heldObject);
+        if (this.heldObject instanceof Book || this.heldObject instanceof ClosedBook)
+        {
+
+        }
+    }
+        
+    
 }
 const config = {
     type: Phaser.AUTO,
     backgroundColor: '#125555',
     width: 960,
     height: 840,
-    scene: Demo,
+    scene: Level,
     pixelArt: true,
     physics: {
         default: 'arcade',
     },
 };
 
-const game = new Phaser.Game(config);
+new Phaser.Game(config);

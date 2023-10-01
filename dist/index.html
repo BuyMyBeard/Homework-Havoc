@@ -3,7 +3,20 @@
   <head>
     <meta charset="utf-8">
     <script src="game.js"></script>
+    <link rel="preload" as="font" href="assets/fonts/pixel-script/pixel-script.ttf" type="font/ttf"/>
+    <style>
+      @font-face {
+        font-family: pixel-script;
+        src: url('./assets/fonts/pixel-script/pixel-script.ttf');
+      }
+      @font-face {
+        font-family: vcr-osd-mono;
+        src: url('./assets/fonts/VCR_OSD_MONO_1.001.ttf');
+      }
+    </style>
   </head>
   <body>
+    <div style="font-family:pixel-script; position: absolute; left:-1000px; visibility:hidden;">.</div>
+    <div style="font-family:vcr-osd-mono; position: absolute; left:-1000px; visibility:hidden;">.</div>
   </body>
 </html>
