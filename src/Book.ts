@@ -45,11 +45,11 @@ export class Book extends Phaser.GameObjects.Container
         Book.front = front;
         Book.back = back;
 
-        front.add(new Phaser.GameObjects.Text(scene, -65, -105, ["A brief history", "of Viridonia"], 
+        front.add(new Phaser.GameObjects.Text(scene, -65, -105, ["A Brief History", "Lesson of the", "Viridonia Kingdom"], 
         {
             align: "center",
             fontFamily: "medieval-pixel",
-            fontSize: 24,
+            fontSize: 20,
         }));
         new BookButton(scene, front, 105, 0).onClick = () => Book.turnRight();
 
