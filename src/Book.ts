@@ -13,6 +13,12 @@ export class Book extends Phaser.GameObjects.Container
     private movable : Phaser.GameObjects.Group
     private static pages : BookPage[] = [];
     private static scene : Phaser.Scene;
+
+    public static get pageCount()
+    {
+        return this.pages.length;
+    }
+
     private constructor(scene : Phaser.Scene, movable : Phaser.GameObjects.Group, x : number, y : number, texture : string)
     {
         super(scene);
@@ -175,11 +181,14 @@ export class Book extends Phaser.GameObjects.Container
 
 export class BookPage extends Phaser.GameObjects.Container
 {
-    constructor(scene : Phaser.Scene)
+    private constructor(scene : Phaser.Scene, x : number, y : number)
     {
         super(scene);
         Book.addPage(this);
         this.setVisible(false);
+        // TODO: for debug, remove for release
+        this.add(new Phaser.GameObjects.Rectangle(scene, 0, 0, 2, 2, 0xFF0000, 0.5));
+        this.setPosition(x, y);
     }
     addText(text : string, x : number, y : number, fontColor = 0x333333, fontSize = 16)
     {
@@ -193,7 +202,7 @@ export class BookPage extends Phaser.GameObjects.Container
     }
     static create(scene : Phaser.Scene)
     {
-        return new BookPage(scene);
+        return new BookPage(scene, Book.pageCount % 2 == 1 ? 20 : -200, -125);
     }
 }
 

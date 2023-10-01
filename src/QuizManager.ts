@@ -38,4 +38,15 @@ export class QuizManager
         if (right) this._rightAnswersCount++;
         return right;
     }
+    static generateQuestions()
+    {
+        QuizManager.addQuestion("What is blue and bounces up and down?", "blueberry");
+        QuizManager.addQuestion([
+            "I like...",
+            "a) Apples",
+            "b) Oranges",
+            "c) Bananas",
+            "d) Ass",
+        ], "a");
+    }
 }

@@ -17,6 +17,8 @@ export class NotePage extends Phaser.GameObjects.Container
         movable.add(this);
 
         (this as any).body.setCollideWorldBounds(true);
+        // TODO: for debug, remove for release
+        this.add(new Phaser.GameObjects.Rectangle(scene, 0, 0, 4, 4, 0xFF0000, 0.8));
     }
 
     addText(text : string | string[], x : number, y : number, fontColor = 0x333333, fontSize = 16)

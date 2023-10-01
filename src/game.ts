@@ -16,6 +16,7 @@ export default class Level extends Phaser.Scene
     laptop : Laptop;
     keyS;
     keyH;
+    note : Phaser.GameObjects.Container;
     constructor ()
     {
         super();
@@ -60,14 +61,7 @@ export default class Level extends Phaser.Scene
 
     create ()
     {
-        QuizManager.addQuestion("What is blue and bounces up and down?", "blueberry");
-        QuizManager.addQuestion([
-            "I like...",
-            "a) Apples",
-            "b) Oranges",
-            "c) Bananas",
-            "d) Ass",
-        ], "a");
+        QuizManager.generateQuestions();
         //SoundManager.init(this, PAPERSHEET1KEY, PAPERSHEET2KEY, PAPERSHEET3KEY,BACKSPACEKEY, SPACEBARKEY, KEYSTROKEKEY);
         
         this.add.image(0, 0, Keys.Textures.DESK).setOrigin(0,0).setScale(3, 3);
@@ -84,7 +78,7 @@ export default class Level extends Phaser.Scene
         BookPage.create(this).addText("Page 2", 50, 100);
         BookPage.create(this).addText("Page 3", 50, 100);
         BookPage.create(this).addText("Page 4", 50, 100);
-        const note = new NotePage(this, this.movable, 500, 600);
+        this.note = new NotePage(this, this.movable, 500, 600);
         new NotePage(this, this.movable, -100, 0);
         new NotePage(this, this.movable, 300, 600);
         NotePage.create(this, this.movable, 500, 500)
@@ -116,10 +110,10 @@ export default class Level extends Phaser.Scene
     {
         const pointer = this.input.activePointer;
         this.debugText.setText([
-            `x: ${pointer.x}`,
-            `y: ${pointer.y}`,
-            `laptop-relative x: ${pointer.x - LAPTOPX}`,
-            `laptop-relative y: ${pointer.y - LAPTOPY}`,
+            `pointer absolute: (${pointer.x}, ${pointer.y})`,
+            `leftpage-relative: (${pointer.x - Book.open.x + 200}, ${pointer.y - Book.open.y + 125})`,
+            `rightpage-relative: (${pointer.x - Book.open.x - 20}, ${pointer.y - Book.open.y + 125})`,
+            `page1-relative: (${pointer.x - this.note.x}, ${pointer.y - this.note.y})`
         ]);
     }
 
