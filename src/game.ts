@@ -3,7 +3,8 @@ import { KeyboardKey, Keys as KeyboardKeys } from './KeyboardKey';
 import { Keys, LAPTOPX, LAPTOPY } from './Constants';
 import { Laptop } from './Laptop';
 import { NotePage } from './NotePage';
-import { Book, ClosedBook } from './Book';
+import { Book, BookButton } from './Book';
+import { checkOverlap } from './UtilsFunctions';
 export default class Level extends Phaser.Scene
 {
     heldObject : Phaser.GameObjects.Container = null;
@@ -12,6 +13,9 @@ export default class Level extends Phaser.Scene
     movable = new Phaser.GameObjects.Group(this);
     debugText : Phaser.GameObjects.Text;
     laptop : Laptop;
+    keyS;
+    keyH;
+    book : Book;
     constructor ()
     {
         super();
@@ -46,18 +50,22 @@ export default class Level extends Phaser.Scene
 
         this.physics.world.setBounds(0, 280, 960, 440);
 
+        
         this.laptop = new Laptop(this);
-
-        const note = new NotePage(this, this.movable, 500, 600);
-        new NotePage(this, this.movable, -100, 0);
-        new NotePage(this, this.movable, 300, 600);
-        NotePage.create(this, this.movable, 500, 500)
-        .addText("I like apples", -70, -100);
+        
+        this.book = Book.init(this, this.movable);
+        // const note = new NotePage(this, this.movable, 500, 600);
+        // new NotePage(this, this.movable, -100, 0);
+        // new NotePage(this, this.movable, 300, 600);
+        // NotePage.create(this, this.movable, 500, 500)
+        // .addText("I like apples", -70, -100);
         this.input.on('gameobjectdown', this.onGameObjectClick, this);
         this.input.on('pointerup', () => this.heldObject = null);    
 
         this.input.on('pointermove', this.onPointerMove, this);
 
+        this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+        this.keyH = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.H);
     }
     tryMoveUp(heldObject: Phaser.GameObjects.Container)
     {
@@ -66,7 +74,7 @@ export default class Level extends Phaser.Scene
         {
             const nextObject = this.children.list[i];
             if (!this.movable.children.contains(nextObject)) continue;
-            if (!this.checkOverlap(heldObject, nextObject)) 
+            if (!checkOverlap(heldObject, nextObject as Phaser.GameObjects.Container)) 
             {
                 this.children.moveBelow(nextObject, heldObject);
                 console.log(`Moved ${heldObjectIndex} above ${i}`);
@@ -83,28 +91,16 @@ export default class Level extends Phaser.Scene
             `laptop-relative x: ${pointer.x - LAPTOPX}`,
             `laptop-relative y: ${pointer.y - LAPTOPY}`,
         ]);
-    }
-
-    checkIfObstructed(gameObject : any)
-    {
-        for (let i = this.children.getIndex(gameObject) + 1; i < this.children.length; i++)
-        {
-            if (!this.movable.children.contains(this.children.list[i])) continue;
-            if (this.checkOverlap(gameObject, this.children.list[i])) return true;
-        }
-        return false;
-    }
-    checkOverlap(spriteA : any, spriteB : any) 
-    {
-        var boundsA = spriteA.getBounds();
-        var boundsB = spriteB.getBounds();
-        return Phaser.Geom.Intersects.RectangleToRectangle(boundsA, boundsB);
+        if (this.keyH.isDown) this.book.setVisible(false);
+        if (this.keyS.isDown) this.book.setVisible(true);
     }
 
     private onGameObjectClick(pointer : Phaser.Input.Pointer, gameObject : Phaser.GameObjects.Container)
     {
         if (gameObject instanceof KeyboardKey)
             this.processKeyboardKey((gameObject as KeyboardKey).key)
+        else if (gameObject instanceof BookButton)
+            (gameObject as BookButton).onClick();
         else
             this.holdObject(pointer, gameObject);
     };
@@ -146,10 +142,6 @@ export default class Level extends Phaser.Scene
         this.cursorX = pointer.x;
         this.cursorY = pointer.y;
         this.tryMoveUp(this.heldObject);
-        if (this.heldObject instanceof Book || this.heldObject instanceof ClosedBook)
-        {
-
-        }
     }
         
     
