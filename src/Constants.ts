@@ -17,6 +17,7 @@ export const Keys =
         BOOKCLOSE1: 'bookclose1',
         BOOKCLOSE2: 'bookclose2',
         VALIDATION: 'validation',
+        WRONG: 'wrong',
     },
     Textures: {
         NOTESHEET: 'notesheet',
@@ -25,7 +26,9 @@ export const Keys =
         BOOKOPEN: 'bookopen',
         BOOKFRONT: 'bookfront',
         BOOKBACK: 'bookback',
-        BOOKBUTTON: 'bookbutton'
+        BOOKBUTTON: 'bookbutton',
+        X: 'x',
+        CHECKMARK: 'checkmark',
     },
 };
 

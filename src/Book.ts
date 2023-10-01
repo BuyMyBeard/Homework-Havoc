@@ -39,6 +39,12 @@ export class Book extends Phaser.GameObjects.Container
         Book.front = front;
         Book.back = back;
 
+        front.add(new Phaser.GameObjects.Text(scene, -65, -105, ["A brief history", "of Viridonia"], 
+        {
+            align: "center",
+            fontFamily: "medieval-pixel",
+            fontSize: 24,
+        }));
         new BookButton(scene, front, 105, 0).onClick = () => Book.turnRight();
 
         new BookButton(scene, back, -105, 0, true).onClick = () => Book.turnLeft();
@@ -177,7 +183,7 @@ export class BookPage extends Phaser.GameObjects.Container
     }
     addText(text : string, x : number, y : number, fontColor = 0x333333, fontSize = 16)
     {
-        this.add(new Phaser.GameObjects.Text(this.scene, x, y, text, {fontFamily: "pixel-script", fontSize: fontSize}).setTint(fontColor));
+        this.add(new Phaser.GameObjects.Text(this.scene, x, y, text, {fontFamily: "vcr-osd-mono", fontSize: fontSize}).setTint(fontColor));
         return this;
     }
     addImage(key : string, x : number, y : number, scale = 1)

@@ -5,6 +5,7 @@ import { Laptop } from './Laptop';
 import { NotePage } from './NotePage';
 import { Book, BookButton, BookPage } from './Book';
 import { checkOverlap, playRandom } from './UtilsFunctions';
+import { QuizManager } from './QuizManager';
 export default class Level extends Phaser.Scene
 {
     heldObject : Phaser.GameObjects.Container = null;
@@ -30,6 +31,8 @@ export default class Level extends Phaser.Scene
         this.load.image(Keys.Textures.BOOKBACK, 'assets/textures/Book-Back.png');
         this.load.image(Keys.Textures.BOOKOPEN, 'assets/textures/Book-Open.png');
         this.load.image(Keys.Textures.BOOKBUTTON, 'assets/textures/Book-Button.png');
+        this.load.image(Keys.Textures.X, 'assets/textures/x.png');
+        this.load.image(Keys.Textures.CHECKMARK, 'assets/textures/checkmark.png');
 
         this.load.audio(Keys.Sounds.PAPERSHEET1, 'assets/sounds/paper-sheet-1.mp3');
         this.load.audio(Keys.Sounds.PAPERSHEET2, 'assets/sounds/paper-sheet-2.mp3');
@@ -52,11 +55,19 @@ export default class Level extends Phaser.Scene
         this.load.audio(Keys.Sounds.BOOKCLOSE2, 'assets/sounds/book-close-2.mp3');
 
         this.load.audio(Keys.Sounds.VALIDATION, 'assets/sounds/validation.mp3');
+        this.load.audio(Keys.Sounds.WRONG, 'assets/sounds/wrong-answer-sound-effect.mp3');
     }
 
     create ()
     {
-
+        QuizManager.addQuestion("What is blue and bounces up and down?", "blueberry");
+        QuizManager.addQuestion([
+            "I like...",
+            "a) Apples",
+            "b) Oranges",
+            "c) Bananas",
+            "d) Ass",
+        ], "a");
         //SoundManager.init(this, PAPERSHEET1KEY, PAPERSHEET2KEY, PAPERSHEET3KEY,BACKSPACEKEY, SPACEBARKEY, KEYSTROKEKEY);
         
         this.add.image(0, 0, Keys.Textures.DESK).setOrigin(0,0).setScale(3, 3);
@@ -131,7 +142,7 @@ export default class Level extends Phaser.Scene
                 break;
 
             case 'enter':
-                // TODO: validate answer
+                this.laptop.computerScreen.validateAnswer();
                 break;
 
             default:
