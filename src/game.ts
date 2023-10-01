@@ -101,7 +101,7 @@ export default class Level extends Phaser.Scene
             if (!checkOverlap(heldObject, nextObject as Phaser.GameObjects.Container)) 
             {
                 this.children.moveBelow(nextObject, heldObject);
-                console.log(`Moved ${heldObjectIndex} above ${i}`);
+                // console.log(`Moved ${heldObjectIndex} above ${i}`);
             }
             else return;
         }
