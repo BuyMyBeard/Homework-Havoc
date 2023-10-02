@@ -12,7 +12,7 @@ const TITLESTYLE : Phaser.Types.GameObjects.Text.TextStyle = {
 const STATEMENTSTYLE : Phaser.Types.GameObjects.Text.TextStyle = {
     fontFamily: "vcr-osd-mono",
     color: "#000000",
-    fontSize: 16,
+    fontSize: 14,
     wordWrap: {
         width: 280,
         useAdvancedWrap: true,
@@ -55,15 +55,15 @@ export class ComputerScreen extends Phaser.GameObjects.Container
     {
         super(scene, 492, 92);
         scene.add.existing(this);
-        this.add(new Phaser.GameObjects.Text(scene, 60, 20, "Homework", TITLESTYLE));
-        this.statement = new Phaser.GameObjects.Text(scene, 20, 60, "Question statement", STATEMENTSTYLE);
-        this.answer = new Phaser.GameObjects.Text(scene, 15, 160, "", ANSWERSTYLE);
+        this.add(new Phaser.GameObjects.Text(scene, 60, 0, "Homework", TITLESTYLE));
+        this.statement = new Phaser.GameObjects.Text(scene, 20, 40, "Question statement", STATEMENTSTYLE);
+        this.answer = new Phaser.GameObjects.Text(scene, 15, 180, "", ANSWERSTYLE);
 
         this.add(this.statement);
         this.add(this.answer);
 
         this.soundManager = SoundManager.instance;
-        this.cursor = new Phaser.GameObjects.Line(scene, 15, 172, 0, 0, 0, 20, 0x000000);
+        this.cursor = new Phaser.GameObjects.Line(scene, 15, 192, 0, 0, 0, 20, 0x000000);
         this.add(this.cursor);
         
         this.xmark = new Phaser.GameObjects.Image(scene, 150, 100, ConstantKeys.Textures.X)
@@ -92,7 +92,7 @@ export class ComputerScreen extends Phaser.GameObjects.Container
         if (this.answer.text.length < ANSWERMAXLENGTH && !this.isValidating)
         {
             this.answer.setText(this.answer.text + character);
-            this.cursor.x += CURSORMOVEMENT;
+            this.cursor.x = 15 + this.answer.width;
             this.cursor.setVisible(true);
             this.scene.time.removeEvent(this.flickerEvent);
             this.scene.time.addEvent(this.flickerEvent);
@@ -105,7 +105,7 @@ export class ComputerScreen extends Phaser.GameObjects.Container
         if (this.answer.text.length > 0 && !this.isValidating)
         {
             this.answer.setText(this.answer.text.substring(0, this.answer.text.length - 1));
-            this.cursor.x -= CURSORMOVEMENT;
+            this.cursor.x = 15 + this.answer.width;
             this.cursor.setVisible(true);
             this.scene.time.removeEvent(this.flickerEvent);
             this.scene.time.addEvent(this.flickerEvent);
@@ -126,7 +126,7 @@ export class ComputerScreen extends Phaser.GameObjects.Container
         }
         else 
         {
-            this.scene.sound.play(ConstantKeys.Sounds.WRONG);
+            this.scene.sound.play(ConstantKeys.Sounds.WRONG, {volume: 0.5});
             this.xmark.setVisible(true);
         }
         this.scene.time.addEvent(new Phaser.Time.TimerEvent({

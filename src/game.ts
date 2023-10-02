@@ -14,9 +14,6 @@ export default class Level extends Phaser.Scene
     movable = new Phaser.GameObjects.Group(this);
     debugText : Phaser.GameObjects.Text;
     laptop : Laptop;
-    keyS : Phaser.Input.Keyboard.Key;
-    keyH : Phaser.Input.Keyboard.Key;
-    note : Phaser.GameObjects.Container;
     constructor ()
     {
         super();
@@ -56,36 +53,31 @@ export default class Level extends Phaser.Scene
         this.load.audio(Keys.Sounds.BOOKCLOSE2, 'assets/sounds/book-close-2.mp3');
 
         this.load.audio(Keys.Sounds.VALIDATION, 'assets/sounds/validation.mp3');
-        this.load.audio(Keys.Sounds.WRONG, 'assets/sounds/wrong-answer-sound-effect.mp3');
+        this.load.audio(Keys.Sounds.WRONG, 'assets/sounds/wrong.mp3');
+        this.load.audio(Keys.Sounds.PCFAN, 'assets/sounds/pc-fan.mp3');
+        this.load.audio(Keys.Sounds.SONG, 'assets/sounds/studying.mp3');
     }
 
     create ()
     {
         QuizManager.generateQuestions();
-        //SoundManager.init(this, PAPERSHEET1KEY, PAPERSHEET2KEY, PAPERSHEET3KEY,BACKSPACEKEY, SPACEBARKEY, KEYSTROKEKEY);
-        
-        this.add.image(0, 0, Keys.Textures.DESK).setOrigin(0,0).setScale(3, 3);
 
-        this.debugText = this.add.text(10,10, 'Debug values');
+        this.sound.add(Keys.Sounds.PCFAN, { loop: true, }).play();
+        this.sound.add(Keys.Sounds.SONG, { loop: true, volume: 0.5, }).play();
+
+        // background
+        this.add.image(0, 0, Keys.Textures.DESK).setOrigin(0,0).setScale(3, 3);
 
         this.physics.world.setBounds(0, 280, 960, 440);
 
-        
         this.laptop = new Laptop(this);
         
+        NotePage.generate(this, this.movable);
         Book.init(this, this.movable);
-        this.note = new NotePage(this, this.movable, 500, 600);
-        new NotePage(this, this.movable, -100, 0);
-        new NotePage(this, this.movable, 300, 600);
-        NotePage.create(this, this.movable, 500, 500)
-        .addText("I like apples", -70, -100);
         this.input.on('gameobjectdown', this.onGameObjectClick, this);
         this.input.on('pointerup', () => this.heldObject = null);    
 
         this.input.on('pointermove', this.onPointerMove, this);
-
-        this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-        this.keyH = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.H);
     }
     tryMoveUp(heldObject: Phaser.GameObjects.Container)
     {
@@ -101,17 +93,6 @@ export default class Level extends Phaser.Scene
             }
             else return;
         }
-    }
-    update(time: number, delta: number): void
-    {
-        const pointer = this.input.activePointer;
-        this.debugText.setText([
-            `pointer absolute: (${pointer.x}, ${pointer.y})`,
-            `leftpage-relative: (${pointer.x - Book.open.x + 200}, ${pointer.y - Book.open.y + 125})`,
-            `rightpage-relative: (${pointer.x - Book.open.x - 20}, ${pointer.y - Book.open.y + 125})`,
-            `page1-relative: (${pointer.x - this.note.x}, ${pointer.y - this.note.y})`,
-        ]);
-        // if (this.keyH.isDown) console.log(this.children.list);
     }
 
     private onGameObjectClick(pointer : Phaser.Input.Pointer, gameObject : Phaser.GameObjects.Container)
@@ -139,7 +120,7 @@ export default class Level extends Phaser.Scene
             default:
                 this.laptop.computerScreen.writeCharacter(input)
                 break;
-            }
+        }
     }
 
     private holdObject(pointer : Phaser.Input.Pointer, gameObject : Phaser.GameObjects.Container)

@@ -19,9 +19,9 @@ export class Book extends Phaser.GameObjects.Container
         return this.pages.length;
     }
 
-    private constructor(scene : Phaser.Scene, movable : Phaser.GameObjects.Group, x : number, y : number, texture : string)
+    private constructor(scene : Phaser.Scene, movable : Phaser.GameObjects.Group, texture : string)
     {
-        super(scene);
+        super(scene, 260, 466);
 
         const openBook = new Phaser.GameObjects.Image(scene, 0, 0, texture).setScale(7);
         this.add(openBook);
@@ -37,9 +37,9 @@ export class Book extends Phaser.GameObjects.Container
     }
     static init(scene : Phaser.Scene, movable : Phaser.GameObjects.Group)
     {
-        const open = new Book(scene, movable, 0, 0, Keys.Textures.BOOKOPEN);
-        const front = new Book(scene, movable, 0, 0, Keys.Textures.BOOKFRONT);
-        const back = new Book(scene, movable, 0, 0, Keys.Textures.BOOKBACK);
+        const open = new Book(scene, movable, Keys.Textures.BOOKOPEN);
+        const front = new Book(scene, movable, Keys.Textures.BOOKFRONT);
+        const back = new Book(scene, movable, Keys.Textures.BOOKBACK);
 
         Book.open = open;
         Book.front = front;
@@ -234,8 +234,6 @@ export class BookPage extends Phaser.GameObjects.Container
         super(scene);
         Book.addPage(this);
         this.setVisible(false);
-        // TODO: for debug, remove for release
-        this.add(new Phaser.GameObjects.Rectangle(scene, 0, 0, 2, 2, 0xFF0000, 0.5));
         this.setPosition(x, y);
     }
     addText(text : string, x : number, y : number, fontSize = 16, fontColor = 0x333333)

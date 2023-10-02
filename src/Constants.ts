@@ -18,6 +18,8 @@ export const Keys =
         BOOKCLOSE2: 'bookclose2',
         VALIDATION: 'validation',
         WRONG: 'wrong',
+        PCFAN: 'pcfan',
+        SONG: 'song',
     },
     Textures: {
         NOTESHEET: 'notesheet',
