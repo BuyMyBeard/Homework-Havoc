@@ -62,7 +62,7 @@ export class Book extends Phaser.GameObjects.Container
         Book.open.setVisible(false);
         Book.back.setVisible(false);
         Book.currentlyActive = front;
-        Book.currentPage = -1
+        Book.currentPage = -1;
 
         Book.scene = scene;
 
