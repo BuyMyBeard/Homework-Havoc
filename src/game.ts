@@ -14,8 +14,8 @@ export default class Level extends Phaser.Scene
     movable = new Phaser.GameObjects.Group(this);
     debugText : Phaser.GameObjects.Text;
     laptop : Laptop;
-    keyS;
-    keyH;
+    keyS : Phaser.Input.Keyboard.Key;
+    keyH : Phaser.Input.Keyboard.Key;
     note : Phaser.GameObjects.Container;
     constructor ()
     {
@@ -74,10 +74,6 @@ export default class Level extends Phaser.Scene
         this.laptop = new Laptop(this);
         
         Book.init(this, this.movable);
-        BookPage.create(this).addText("Page 1", 50, 100);
-        BookPage.create(this).addText("Page 2", 50, 100);
-        BookPage.create(this).addText("Page 3", 50, 100);
-        BookPage.create(this).addText("Page 4", 50, 100);
         this.note = new NotePage(this, this.movable, 500, 600);
         new NotePage(this, this.movable, -100, 0);
         new NotePage(this, this.movable, 300, 600);
@@ -97,7 +93,7 @@ export default class Level extends Phaser.Scene
         for (let i = heldObjectIndex + 1; i < this.children.length; i++)
         {
             const nextObject = this.children.list[i];
-            if (!this.movable.children.contains(nextObject)) continue;
+            if (!this.movable.children.contains(nextObject) || !(nextObject as Phaser.GameObjects.Container).visible) continue;
             if (!checkOverlap(heldObject, nextObject as Phaser.GameObjects.Container)) 
             {
                 this.children.moveBelow(nextObject, heldObject);
@@ -113,8 +109,9 @@ export default class Level extends Phaser.Scene
             `pointer absolute: (${pointer.x}, ${pointer.y})`,
             `leftpage-relative: (${pointer.x - Book.open.x + 200}, ${pointer.y - Book.open.y + 125})`,
             `rightpage-relative: (${pointer.x - Book.open.x - 20}, ${pointer.y - Book.open.y + 125})`,
-            `page1-relative: (${pointer.x - this.note.x}, ${pointer.y - this.note.y})`
+            `page1-relative: (${pointer.x - this.note.x}, ${pointer.y - this.note.y})`,
         ]);
+        // if (this.keyH.isDown) console.log(this.children.list);
     }
 
     private onGameObjectClick(pointer : Phaser.Input.Pointer, gameObject : Phaser.GameObjects.Container)

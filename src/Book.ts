@@ -65,6 +65,8 @@ export class Book extends Phaser.GameObjects.Container
         Book.currentPage = -1
 
         Book.scene = scene;
+
+        this.generate(scene);
     }
     static turnLeft()
     {
@@ -177,6 +179,52 @@ export class Book extends Phaser.GameObjects.Container
         }
         return false;
     }
+    static generate(scene : Phaser.Scene)
+    {
+        BookPage.create(scene)
+        .addText("1", 10, 215)
+        .addText("The foundation", 10, 0, 20)
+        .addText("The story of the Viridonia country starts back in the year 568, when King Risocrat acquired the land from savages after the War of the Magistoul. It had been 2 years the war was raging. The savages were not as well equipped for the battlefield but would use underhanded tactics to keep their lands well protected. ",
+        10, 30, 12);
+
+        BookPage.create(scene)
+        .addText("2", 165, 215)
+        .addText("King Risocrat founded the city of Jerqum, and had Bobarre, the famous architect who built the Mendower Fortress, design the fortifications for the city. Bobarre designed a new type of wall that could withstand the dangerous siege machines that were invented 3 years prior by the land of Wyne.",
+        10, 10, 12);
+
+        BookPage.create(scene)
+        .addText("3", 10, 215)
+        .addText("By the year 574, the the city of Jerqum was fully built and fortified and could withstand the many assaults of the neighbouring countries.",
+        10, 0, 12);
+
+        BookPage.create(scene)
+        .addText("4", 165, 215)
+        .addText("The flourishing of the capital", 10, 0, 20)
+        .addText("Viridonia, with its well fortified capital, could thrive and expand his land. By the year 600, the city of Jerqum had become a massive commercial hub, and the counties surrounding it would produce many crops with the new agricultural technology being developed.",
+        10, 60, 12);
+
+        BookPage.create(scene)
+        .addText("5", 10, 215)
+        .addText("The mines exploited to the north allowed the production of armaments and armor and could export it along with the crops through the Sionnis River, which bordered the city and lead to the ocean.",
+        10, 0, 12);
+
+        BookPage.create(scene)
+        .addText("6", 165, 215)
+        .addText("The fall of the city of Jerqum", 10, 0, 20)
+        .addText("By the year 950, the city had amassed vast amounts of riches, and tensions were escalading with neighbours. The emperor from the land of Wyne felt like he was getting the short end of the stick in exporting taxes and wanted a better deal. He launched an assault in 951 against the city, but the fortifications held tight. The emperor's", 
+        10, 60, 12);
+
+        BookPage.create(scene)
+        .addText("7", 10, 215)
+        .addText("forces were forced to turn back while the residents were celebrating their victory.", 10, 0, 12)
+        .addText("That's when the city understood what had transpired. When they opened the door to their treasury, they found an empty room and a tunnel. The assault was an elaborate ruse by the emperor to steal their riches, and his plan had succeeded.",
+        10, 60, 12);
+
+        BookPage.create(scene)
+        .addText("8", 165, 215)
+        .addText("Following those events, the city collapsed in an economical crisis, and by the year 954, all the aristocracy had migrated to the surrounding cities, leaving the peasant class fighting amongst themselves for scraps. It would take years before the city would recover from the crisis.",
+        10, 0, 12);
+    }
 }
 
 export class BookPage extends Phaser.GameObjects.Container
@@ -190,9 +238,18 @@ export class BookPage extends Phaser.GameObjects.Container
         this.add(new Phaser.GameObjects.Rectangle(scene, 0, 0, 2, 2, 0xFF0000, 0.5));
         this.setPosition(x, y);
     }
-    addText(text : string, x : number, y : number, fontColor = 0x333333, fontSize = 16)
+    addText(text : string, x : number, y : number, fontSize = 16, fontColor = 0x333333)
     {
-        this.add(new Phaser.GameObjects.Text(this.scene, x, y, text, {fontFamily: "vcr-osd-mono", fontSize: fontSize}).setTint(fontColor));
+        this.add(new Phaser.GameObjects.Text(this.scene, x, y, text, 
+            {
+                fontFamily: "vcr-osd-mono", 
+                fontSize: fontSize,
+                wordWrap: {
+                    width: 180,
+                    useAdvancedWrap: true,
+                },
+                align: "justify",
+            }).setTint(fontColor));
         return this;
     }
     addImage(key : string, x : number, y : number, scale = 1)

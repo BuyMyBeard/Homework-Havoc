@@ -1,7 +1,7 @@
 export class QuizManager
 {   
-    private static questions : Array<[string | string[], string]> = [];
-    private static _currentAnswer : string;
+    private static questions : Array<[string | string[], string[]]> = [];
+    private static _currentAnswer : string[];
     private static _questionsCount = 0;
     private static _rightAnswersCount = 0;
     static get allQuestionsCompleted()
@@ -21,9 +21,9 @@ export class QuizManager
         return this._rightAnswersCount;
     }
 
-    static addQuestion(statement : string | string[], answer : string)
+    static addQuestion(statement : string | string[], ...answers : string[])
     {
-        QuizManager.questions.push([statement, answer]);
+        QuizManager.questions.push([statement, answers]);
         this._questionsCount++;
     }
     static nextQuestion()
@@ -34,7 +34,7 @@ export class QuizManager
     }
     static validateAnswer(submittedAnswer : string)
     {
-        const right =  this.currentAnswer === submittedAnswer;
+        const right = this.currentAnswer.indexOf(submittedAnswer.trim()) !== -1;
         if (right) this._rightAnswersCount++;
         return right;
     }
