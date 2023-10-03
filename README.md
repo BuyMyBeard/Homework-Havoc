@@ -16,7 +16,7 @@ Since this is Ludum Dare, there are 3 formats:
 - The Jam (solo or in teams, 72 hours, mostly from scratch)
 - Extra (solo or in teams, 3 weeks, mostly from scratch)
 
-I originally aimed for The Compo, since I made all the sounds and music myself, but decided to opt for The Jam to keep my sanity and since I had a lot of content to produce (A narative, the class notes and the questions).
+I originally aimed for The Compo, since I made all the sounds and music myself, but decided to opt for The Jam to keep my sanity and since I had a lot of content to produce (a narative, the class notes and the questions).
 
 Enjoy browsing the code and playing!
 
