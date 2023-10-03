@@ -1,49 +1,20 @@
-# Phaser 3 TypeScript Project Template
+# Homework Havoc
+Ludum Dare 52 jam submission
 
-This quick-start project template combines Phaser 3.60 with [TypeScript 5](https://www.typescriptlang.org/) and uses [Rollup](https://rollupjs.org) for bundling.
+[Play here!](https://buymybeard.github.io/Homework-Havoc/)
 
-## Requirements
+This Game Jam was an occasion to learn Phaser 3, and to produce all my assets myself as is recommended for Ludum Dare. I recorded and produced the entirety of the sound effects and music for this game!
 
-[Node.js](https://nodejs.org) is required to install dependencies and run scripts via `npm`.
+## Technical challenge
+On top of never using Phaser 3 before for making a game, I took ahead the big challenge of implementing a system that allows to move around paper sheets on top of each other in 2D. It's hard to describe, but you can try it for yourself by playing the game. It was challenging to play with rendering order of objects in my scene but I managed to make a system that works seemlessly.
 
-## Available Commands
+## Time constraint
+Since this is Ludum Dare, there are 3 formats:
+- The Compo (solo, 48 hours, open-source, from scratch)
+- The Jam (solo or in teams, 72 hours, mostly from scratch)
+- Extra (solo or in teams, 3 weeks, mostly from scratch)
 
-| Command | Description |
-|---------|-------------|
-| `npm install` | Install project dependencies |
-| `npm run watch` | Build project and open web server running project, watching for changes |
-| `npm run dev` | Builds project and open web server, but do not watch for changes |
-| `npm run build` | Builds code bundle with production settings (minification, no source maps, etc..) |
+I originally aimed for The Compo, since I made all the sounds and music myself, but decided to opt for The Jam to keep my sanity and since I had a lot of content to produce (A narative, the class notes and the questions).
 
-## Writing Code
+Enjoy browsing the code and playing!
 
-After cloning the repo, run `npm install` from your project directory. Then, you can start the local development
-server by running `npm run watch`. The first time you run this you should see the following demo run:
-
-![Screenshot](screenshot.png "Phaser 3 Example")
-
-After starting the development server with `npm run watch`, you can edit any files in the `src` folder
-and Rollup will automatically recompile and reload your server (available at `http://localhost:10001`
-by default).
-
-## Configuring Rollup
-
-* Edit the file `rollup.config.dev.js` to edit the development build.
-* Edit the file `rollup.config.dist.js` to edit the distribution build.
-
-You will find lots of comments inside the rollup config files to help you do this.
-
-Note that due to the build process involved, it can take around 20 seconds to build the initial bundle. Times will vary based on CPU and local drive speeds. The development config does not minify the code in order to save build time, but it does generate source maps. If you do not require these, disable them in the config to speed it up further.
-
-## Versions Used
-
-* Phaser 3.60
-* TypeScript 5.0.3
-* Rollup 3.20.2
-* Rollup Plugins:
-  * @rollup/plugin-commonjs 24.0.1
-  * @rollup/plugin-node-resolve 15.0.2
-  * @rollup/plugin-replace 5.0.2
-  * @rollup/plugin-terser 0.4.0
-  * @rollup/plugin-typescript 11.1.0
-  * rollup-plugin-serve 2.0.2
