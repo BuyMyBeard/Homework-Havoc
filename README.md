@@ -1,5 +1,5 @@
 # Homework Havoc
-Ludum Dare 52 jam submission
+Ludum Dare 54 jam submission
 
 [Play here!](https://buymybeard.github.io/Homework-Havoc/)
 
